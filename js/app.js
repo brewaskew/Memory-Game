@@ -19,8 +19,24 @@ function displayCards(cardDeck) {
     }
 }
 
-function flipCard(card) {
-    card.outerHTML = "<li class='card open show'>" + card.innerHTML + "</i></li>";
+function flipCard(card, cardNum) {
+    //console.log(card);
+    if (cardNum === 0) {
+        card.outerHTML = "<li id='card1' class='card open show'>" + card.innerHTML + "</i></li>";
+    }
+    else {
+        card.outerHTML = "<li id='card2' class='card open show'>" + card.innerHTML + "</i></li>";
+    }
+    
+}
+
+function setMatch(cardsPlayed) {
+    const card1 = cardsPlayed[0];
+    const card2 = cardsPlayed[1];
+}
+
+function resetCards(cardsPlayed) {
+    console.log(cardsPlayed);
 }
 
  
@@ -64,18 +80,45 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
     displayCards(deck);
 
+    //************************  resets board but doesn't let play anymore  *********************
     const reset = document.getElementsByClassName("restart");
     reset[0].addEventListener('click', function() {
         displayCards(deck);
     });
 
     const gamePlay = document.getElementsByClassName("card");
-    //let cardsFlipped = 0;
+    let cardsFlipped = 0;
+    let cardsPlayed = [];
+        
     for (let card of gamePlay) {
         card.addEventListener('click', function(evt) {
-            flipCard(card);
+              
+
+            if (cardsFlipped < 2) {
+                flipCard(card, cardsFlipped);                
+                if (cardsFlipped === 0) {
+                    let card1 = document.getElementById('card1');                    
+                }
+                else {
+                    let card2 = document.getElementById('card2');
+                }
+
+                cardsFlipped += 1;
+                
+                if (cardsFlipped === 2) {                   
+                    if (card1.innerHTML === card2.innerHTML) {
+                        
+                        card1.outerHTML = "<li class='card match'>" + card1.innerHTML + "</i></li>";
+                        card2.outerHTML = "<li class='card match'>" + card2.innerHTML + "</i></li>";
+                        cardsFlipped = 0;                    
+                    }
+                    else {
+                        card1.outerHTML = "<li class='card'>" + card1.innerHTML + "</i></li>";
+                        card2.outerHTML = "<li class='card'>" + card2.innerHTML + "</i></li>";
+                        cardsFlipped = 0;
+                    }
+                }
+            }            
         });
     }
-    
-
 });
