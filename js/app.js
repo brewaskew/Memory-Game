@@ -13,13 +13,11 @@
 
 function displayCards(cardDeck) {
     const shuffledDeck = shuffle(cardDeck);
-    console.log(shuffledDeck);
     const deckGrid = document.querySelectorAll('li.card');
+    console.log(deckGrid);
     for (let i=0; i<deckGrid.length; i++) {
-        deckGrid[i].innerHTML = "<i class='" + shuffledDeck[i] + "'></i>";        
+        deckGrid[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";        
     }
-
-
 }
 
  
