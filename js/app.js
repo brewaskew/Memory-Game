@@ -1,8 +1,8 @@
 /*
  * Create a list that holds all of your cards
  */
-const deck = [diamond, plane, anchor, bolt,
-              cube, leaf, bicycle, bomb]; 
+const deck = ['diamond', 'diamond', 'plane', 'plane', 'anchor', 'anchor', 'bolt', 'bolt',
+              'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb']; 
 
 
 /*
@@ -11,6 +11,9 @@ const deck = [diamond, plane, anchor, bolt,
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+ const shuffledDeck = shuffle(deck);
+ console.log(shuffledDeck);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
