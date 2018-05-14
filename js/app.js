@@ -89,6 +89,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
     const gamePlay = document.getElementsByClassName("card");
     let cardsFlipped = 0;
     let cardsPlayed = [];
+    let moves = 0;
+    let displayScore = document.querySelector(".moves");
+    displayScore.innerText = moves;
         
     for (let card of gamePlay) {
         card.addEventListener('click', function(evt) {
@@ -105,7 +108,12 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
                 cardsFlipped += 1;
                 
-                if (cardsFlipped === 2) {                   
+                if (cardsFlipped === 2) {
+                    moves += 1;
+                    displayScore.innerHTML = moves;
+
+                    
+                                       
                     if (card1.innerHTML === card2.innerHTML) {
                         
                         card1.outerHTML = "<li class='card match'>" + card1.innerHTML + "</i></li>";
