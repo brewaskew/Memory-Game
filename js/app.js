@@ -14,7 +14,6 @@
 function displayCards(cardDeck) {
     const shuffledDeck = shuffle(cardDeck);
     const deckGrid = document.querySelectorAll('li.card');
-    console.log(deckGrid);
     for (let i=0; i<deckGrid.length; i++) {
         deckGrid[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";        
     }
@@ -60,5 +59,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
                   "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"]; 
 
     displayCards(deck);
+
+    const reset = document.getElementsByClassName("restart");
+    reset[0].addEventListener('click', function() {
+        displayCards(deck);
+    });
 
 });
