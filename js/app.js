@@ -19,6 +19,10 @@ function displayCards(cardDeck) {
     }
 }
 
+function flipCard(card) {
+    card.outerHTML = "<li class='card open show'>" + card.innerHTML + "</i></li>";
+}
+
  
 
 
@@ -64,5 +68,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
     reset[0].addEventListener('click', function() {
         displayCards(deck);
     });
+
+    const gamePlay = document.getElementsByClassName("card");
+    //let cardsFlipped = 0;
+    for (let card of gamePlay) {
+        card.addEventListener('click', function(evt) {
+            flipCard(card);
+        });
+    }
+    
 
 });
