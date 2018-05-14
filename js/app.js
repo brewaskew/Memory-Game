@@ -1,6 +1,8 @@
 /*
  * Create a list that holds all of your cards
  */
+const deck = [diamond, plane, anchor, bolt,
+              cube, leaf, bicycle, bomb]; 
 
 
 /*
