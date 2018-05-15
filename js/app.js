@@ -80,23 +80,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
     gamePlay.addEventListener('click', function(evt) {
         if (evt.target.className === "card") {
-            console.log(evt);
             flipCard(evt.target);
-            openCards.push(evt);
+            openCards.push(evt.target);
 
             if (openCards.length === 2) {
                 console.log(openCards);
-                if (openCards[0].path[0].innerHTML === openCards[1].path[0].innerHTML) {
+                if (openCards[0].innerHTML === openCards[1].innerHTML) {
                     //setMatch(openCards);
                     for (let i=0; i<openCards.length; i++) {
-                        openCards[i].path[0].outerHTML = "<li class='card match'>" + openCards[i].path[0].innerHTML + "</li>";
+                        openCards[i].outerHTML = "<li class='card match'>" + openCards[i].innerHTML + "</li>";
                     }
                     openCards.pop();
                     openCards.pop();
                 }
                 else {
                     for (let i=0; i<openCards.length; i++) {
-                        openCards[i].path[0].outerHTML = "<li class='card'>" + openCards[i].path[0].innerHTML + "</li>";
+                        openCards[i].outerHTML = "<li class='card'>" + openCards[i].innerHTML + "</li>";
                     }
                     openCards.pop();
                     openCards.pop();
