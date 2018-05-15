@@ -13,26 +13,41 @@
 function displayCards(cardDeck) {
     const shuffledDeck = shuffle(cardDeck);
     const deckGrid = document.querySelector('.deck');
-        
-    for (let i=0; i<deckGrid.children.length; i++) {
+
+    for (let i = 0; i < deckGrid.children.length; i++) {
         deckGrid.children[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";
-    }                
+    }
 }
 
 function flipCard(card, cardNum) {
-    //console.log(card);
+    /*console.log(card);
     if (cardNum === 0) {
         card.outerHTML = "<li id='card1' class='card open show'>" + card.innerHTML + "</i></li>";
     }
     else {
         card.outerHTML = "<li id='card2' class='card open show'>" + card.innerHTML + "</i></li>";
-    }
-    
+    }*/
+    card.outerHTML = "<li id='card2' class='card open show'>" + card.innerHTML + "</i></li>";
+
 }
 
 
 
 //Once I get matched and unmatched cards working put into a function here
+function setMatch(openCardsArray) {
+    
+    if (openCardsArray[0].innerHTML === openCardsArray[1].innerHTML) {
+        setMatch(openCards);
+        for (let i = 0; i < openCardsArray.length; i++) {
+            openCardsArray[i].outerHTML = "<li class='card match'>" + openCardsArray[i].innerHTML + "</li>";
+        }
+    }
+    else {
+        for (let i = 0; i < openCardsArray.length; i++) {
+            openCardsArray[i].outerHTML = "<li class='card'>" + openCardsArray[i].innerHTML + "</li>";
+        }
+    }
+}
 
 
 
@@ -65,12 +80,12 @@ function shuffle(array) {
 
 
 
-document.addEventListener('DOMContentLoaded', function(e) {
+document.addEventListener('DOMContentLoaded', function (e) {
     const deck = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o",
-                  "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
-                  "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"]; 
+        "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
+        "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
 
-    displayCards(deck);    
+    displayCards(deck);
 
     const gamePlay = document.querySelector(".deck");
     let openCards = [];
@@ -78,28 +93,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
     let displayScore = document.querySelector(".moves");
     displayScore.innerText = moves;
 
-    gamePlay.addEventListener('click', function(evt) {
+    gamePlay.addEventListener('click', function (evt) {
         if (evt.target.className === "card") {
             flipCard(evt.target);
             openCards.push(evt.target);
 
             if (openCards.length === 2) {
-                console.log(openCards);
-                if (openCards[0].innerHTML === openCards[1].innerHTML) {
-                    //setMatch(openCards);
-                    for (let i=0; i<openCards.length; i++) {
-                        openCards[i].outerHTML = "<li class='card match'>" + openCards[i].innerHTML + "</li>";
-                    }
-                    openCards.pop();
-                    openCards.pop();
-                }
-                else {
-                    for (let i=0; i<openCards.length; i++) {
-                        openCards[i].outerHTML = "<li class='card'>" + openCards[i].innerHTML + "</li>";
-                    }
-                    openCards.pop();
-                    openCards.pop();
-                }
+                setMatch(openCards);
             }
         }
 
