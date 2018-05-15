@@ -81,17 +81,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
     displayCards(deck);
 
     //************************  resets board but doesn't let play anymore  *********************
-    const reset = document.getElementsByClassName("restart");
-    reset[0].addEventListener('click', function() {
-        displayCards(deck);
-    });
+    
 
     const gamePlay = document.getElementsByClassName("card");
     let cardsFlipped = 0;
     let cardsPlayed = [];
     let moves = 0;
     let displayScore = document.querySelector(".moves");
-    displayScore.innerText = moves;
+    displayScore.innerHTML = moves;
+    let matchedSets = 0;
         
     for (let card of gamePlay) {
         card.addEventListener('click', function(evt) {
@@ -111,14 +109,27 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 if (cardsFlipped === 2) {
                     moves += 1;
                     displayScore.innerHTML = moves;
+                    if (moves > 10 && moves < 14) {
+                        //remove star from scoreboard (2 star game)
+                    }
+                    else if (moves >= 14) {
+                        //remove star from scoreboard (1 star game)
+                    }
+                    else {
+                        //keep scoreboard same (3 star game)
+                    }
 
-                    
+
                                        
                     if (card1.innerHTML === card2.innerHTML) {
                         
                         card1.outerHTML = "<li class='card match'>" + card1.innerHTML + "</i></li>";
                         card2.outerHTML = "<li class='card match'>" + card2.innerHTML + "</i></li>";
-                        cardsFlipped = 0;                    
+                        cardsFlipped = 0;
+                        matchedSets += 1;
+                        if (matchedSets === 8) {
+                            //stop timer popup window with stars, moves, and time
+                        }                    
                     }
                     else {
                         card1.outerHTML = "<li class='card'>" + card1.innerHTML + "</i></li>";
@@ -129,4 +140,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
             }            
         });
     }
+
+    const reset = document.getElementsByClassName("restart");
+    reset[0].addEventListener('click', function() {
+        displayCards(deck);
+    });
 });
