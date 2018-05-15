@@ -10,13 +10,13 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
-
 function displayCards(cardDeck) {
     const shuffledDeck = shuffle(cardDeck);
-    const deckGrid = document.querySelectorAll('li.card');
-    for (let i=0; i<deckGrid.length; i++) {
-        deckGrid[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";        
-    }
+    const deckGrid = document.querySelector('.deck');
+        
+    for (let i=0; i<deckGrid.children.length; i++) {
+        deckGrid.children[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";
+    }                
 }
 
 function flipCard(card, cardNum) {
@@ -30,17 +30,9 @@ function flipCard(card, cardNum) {
     
 }
 
-function setMatch(cardsPlayed) {
-    const card1 = cardsPlayed[0];
-    const card2 = cardsPlayed[1];
-}
 
-function resetCards(cardsPlayed) {
-    console.log(cardsPlayed);
-}
 
- 
-
+//Once I get matched and unmatched cards working put into a function here
 
 
 
@@ -78,71 +70,40 @@ document.addEventListener('DOMContentLoaded', function(e) {
                   "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
                   "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"]; 
 
-    displayCards(deck);
+    displayCards(deck);    
 
-    //************************  resets board but doesn't let play anymore  *********************
-    
-
-    const gamePlay = document.getElementsByClassName("card");
-    let cardsFlipped = 0;
-    let cardsPlayed = [];
+    const gamePlay = document.querySelector(".deck");
+    let openCards = [];
     let moves = 0;
     let displayScore = document.querySelector(".moves");
-    displayScore.innerHTML = moves;
-    let matchedSets = 0;
-        
-    for (let card of gamePlay) {
-        card.addEventListener('click', function(evt) {
-              
+    displayScore.innerText = moves;
 
-            if (cardsFlipped < 2) {
-                flipCard(card, cardsFlipped);                
-                if (cardsFlipped === 0) {
-                    let card1 = document.getElementById('card1');                    
+    gamePlay.addEventListener('click', function(evt) {
+        if (evt.target.className === "card") {
+            console.log(evt);
+            flipCard(evt.target);
+            openCards.push(evt);
+
+            if (openCards.length === 2) {
+                console.log(openCards);
+                if (openCards[0].path[0].innerHTML === openCards[1].path[0].innerHTML) {
+                    //setMatch(openCards);
+                    for (let i=0; i<openCards.length; i++) {
+                        openCards[i].path[0].outerHTML = "<li class='card match'>" + openCards[i].path[0].innerHTML + "</li>";
+                    }
+                    openCards.pop();
+                    openCards.pop();
                 }
                 else {
-                    let card2 = document.getElementById('card2');
+                    for (let i=0; i<openCards.length; i++) {
+                        openCards[i].path[0].outerHTML = "<li class='card'>" + openCards[i].path[0].innerHTML + "</li>";
+                    }
+                    openCards.pop();
+                    openCards.pop();
                 }
+            }
+        }
 
-                cardsFlipped += 1;
-                
-                if (cardsFlipped === 2) {
-                    moves += 1;
-                    displayScore.innerHTML = moves;
-                    if (moves > 10 && moves < 14) {
-                        //remove star from scoreboard (2 star game)
-                    }
-                    else if (moves >= 14) {
-                        //remove star from scoreboard (1 star game)
-                    }
-                    else {
-                        //keep scoreboard same (3 star game)
-                    }
-
-
-                                       
-                    if (card1.innerHTML === card2.innerHTML) {
-                        
-                        card1.outerHTML = "<li class='card match'>" + card1.innerHTML + "</i></li>";
-                        card2.outerHTML = "<li class='card match'>" + card2.innerHTML + "</i></li>";
-                        cardsFlipped = 0;
-                        matchedSets += 1;
-                        if (matchedSets === 8) {
-                            //stop timer popup window with stars, moves, and time
-                        }                    
-                    }
-                    else {
-                        card1.outerHTML = "<li class='card'>" + card1.innerHTML + "</i></li>";
-                        card2.outerHTML = "<li class='card'>" + card2.innerHTML + "</i></li>";
-                        cardsFlipped = 0;
-                    }
-                }
-            }            
-        });
-    }
-
-    const reset = document.getElementsByClassName("restart");
-    reset[0].addEventListener('click', function() {
-        displayCards(deck);
     });
+
 });
