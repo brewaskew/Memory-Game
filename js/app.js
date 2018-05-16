@@ -19,33 +19,32 @@ function displayCards(cardDeck) {
     }
 }
 
-function flipCard(card, cardNum) {
-    /*console.log(card);
-    if (cardNum === 0) {
-        card.outerHTML = "<li id='card1' class='card open show'>" + card.innerHTML + "</i></li>";
-    }
-    else {
-        card.outerHTML = "<li id='card2' class='card open show'>" + card.innerHTML + "</i></li>";
-    }*/
-    card.outerHTML = "<li id='card2' class='card open show'>" + card.innerHTML + "</i></li>";
+function flipCard(card) {
+    card.target.classList.add('open');
+    card.target.classList.add('show');
 
 }
 
 
 
-//Once I get matched and unmatched cards working put into a function here
+//Check if cards are a match and lock them in place.
 function setMatch(openCardsArray) {
     
-    if (openCardsArray[0].innerHTML === openCardsArray[1].innerHTML) {
-        setMatch(openCards);
+    
+    if (openCardsArray[0].firstElementChild.classList[1] === openCardsArray[1].firstElementChild.classList[1]) {
+
         for (let i = 0; i < openCardsArray.length; i++) {
-            openCardsArray[i].outerHTML = "<li class='card match'>" + openCardsArray[i].innerHTML + "</li>";
+            openCardsArray[i].classList.add('match');
         }
+        return 1;
     }
     else {
+        
         for (let i = 0; i < openCardsArray.length; i++) {
-            openCardsArray[i].outerHTML = "<li class='card'>" + openCardsArray[i].innerHTML + "</li>";
+            openCardsArray[i].classList.remove('open');
+            openCardsArray[i].classList.remove('show');
         }
+        return 0;
     }
 }
 
@@ -89,20 +88,61 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     const gamePlay = document.querySelector(".deck");
     let openCards = [];
+    let stars = document.getElementsByClassName('stars');
     let moves = 0;
     let displayScore = document.querySelector(".moves");
     displayScore.innerText = moves;
+    let matchedSet = 0;
+
 
     gamePlay.addEventListener('click', function (evt) {
-        if (evt.target.className === "card") {
-            flipCard(evt.target);
-            openCards.push(evt.target);
+            if (evt.target.className === "card") {
+                flipCard(evt);
+                openCards.push(evt.target);
+    
+                if (openCards.length === 2) {
+                    moves += 1;
+                    displayScore.innerText = moves;
+                    matchedSet += setMatch(openCards);
+                    if (matchedSet === 8) {
+                        console.log('you won');
+                    }
+                    openCards.pop();
+                    openCards.pop();
 
-            if (openCards.length === 2) {
-                setMatch(openCards);
-            }
-        }
+                    //change stars score
+                    if (moves === 2) {
+                        let removeEl = stars[0].children[2];
+                        stars[0].removeChild(removeEl);
+                    }
+                    else if (moves === 3) {
+                        removeEl = stars[0].children[1];
+                        stars[0].removeChild(removeEl);
+                    }
+                }           
+            }            
 
+            const gameReset = document.querySelector('.restart');
+            gameReset.addEventListener('click', function (evt) {
+                displayCards(deck);  //reset deck and grid
+                moves = 0;  //reset number of moves
+                displayScore.innerText = moves;
+                matchedSet = 0;  //reset number of matches
+                for (let i=0; i<openCards.length; i++) {  //remove any open cards in openCards array
+                    openCards.pop();
+                }
+                
+                /******Reset stars score******/
+                let newEl = document.createElement('li');
+                let newI = document.createElement('i');
+                newI.className = 'fa fa-star';
+                newEl.appendChild(newI);
+                                
+                for (let i=stars[0].children.length; i<3; i++) {
+                    stars[0].appendChild(newEl);
+                }   
+            });
+        
     });
 
 });
