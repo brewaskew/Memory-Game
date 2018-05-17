@@ -28,23 +28,25 @@ function flipCard(card) {
 
 
 
-//Check if cards are a match and lock them in place.
+//Check if cards are a match and lock them in place. Return 1 to increment matchedSets counter
 function setMatch(openCardsArray) {
 
-        for (let i = 0; i < openCardsArray.length; i++) {
-            openCardsArray[i].classList.add('match');
-        }
-        return 1;
+    for (let i = 0; i < openCardsArray.length; i++) {
+        openCardsArray[i].classList.add('match');
+    }
+    return 1;
 }
 
+
+//resets flipped cards back to facedown and returns 0 to keep matched sets at current value
 function noMatchedSet(openCardsArray) {
-      
-        for (let i = 0; i < openCardsArray.length; i++) {
-            openCardsArray[i].classList.remove('flip');
-            openCardsArray[i].classList.remove('open');
-            openCardsArray[i].classList.remove('show');
-        }
-        return 0;
+         
+    for (let i = 0; i < openCardsArray.length; i++) {
+        openCardsArray[i].classList.remove('flip');
+        openCardsArray[i].classList.remove('open');
+        openCardsArray[i].classList.remove('show');
+    }
+    return 0;
 }
 
 
@@ -105,8 +107,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
                         matchedSet += setMatch(openCards);
                     }
-                    else {
-                        noMatchedSet(openCards);
+                    else {                        
+                        matchedSet += noMatchedSet(openCards);
                     }
 
                     if (matchedSet === 8) {
