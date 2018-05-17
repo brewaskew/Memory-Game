@@ -10,6 +10,7 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
 function displayCards(cardDeck) {
     const shuffledDeck = shuffle(cardDeck);
     const deckGrid = document.querySelector('.deck');
@@ -20,9 +21,9 @@ function displayCards(cardDeck) {
 }
 
 function flipCard(card) {
+    card.target.classList.add('flip');
     card.target.classList.add('open');
     card.target.classList.add('show');
-
 }
 
 
@@ -31,21 +32,24 @@ function flipCard(card) {
 function setMatch(openCardsArray) {
     
     
-    if (openCardsArray[0].firstElementChild.classList[1] === openCardsArray[1].firstElementChild.classList[1]) {
+    //if (openCardsArray[0].firstElementChild.classList[1] === openCardsArray[1].firstElementChild.classList[1]) {
 
         for (let i = 0; i < openCardsArray.length; i++) {
             openCardsArray[i].classList.add('match');
         }
         return 1;
-    }
-    else {
-        
+    //}
+}
+
+function noMatchedSet(openCardsArray) {
+    //else {        
         for (let i = 0; i < openCardsArray.length; i++) {
+            openCardsArray[i].classList.remove('flip');
             openCardsArray[i].classList.remove('open');
             openCardsArray[i].classList.remove('show');
         }
         return 0;
-    }
+    //}
 }
 
 
@@ -103,7 +107,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 if (openCards.length === 2) {
                     moves += 1;
                     displayScore.innerText = moves;
-                    matchedSet += setMatch(openCards);
+                    if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
+                        matchedSet += setMatch(openCards);
+                    }
+                    else {
+                        noMatchedSet(openCards);
+                    }
+
                     if (matchedSet === 8) {
                         console.log('you won');
                     }
@@ -111,11 +121,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     openCards.pop();
 
                     //change stars score
-                    if (moves === 2) {
+                    if (moves === 13) {
                         let removeEl = stars[0].children[2];
                         stars[0].removeChild(removeEl);
                     }
-                    else if (moves === 3) {
+                    else if (moves === 17) {
                         removeEl = stars[0].children[1];
                         stars[0].removeChild(removeEl);
                     }
