@@ -30,26 +30,21 @@ function flipCard(card) {
 
 //Check if cards are a match and lock them in place.
 function setMatch(openCardsArray) {
-    
-    
-    //if (openCardsArray[0].firstElementChild.classList[1] === openCardsArray[1].firstElementChild.classList[1]) {
 
         for (let i = 0; i < openCardsArray.length; i++) {
             openCardsArray[i].classList.add('match');
         }
         return 1;
-    //}
 }
 
 function noMatchedSet(openCardsArray) {
-    //else {        
+      
         for (let i = 0; i < openCardsArray.length; i++) {
             openCardsArray[i].classList.remove('flip');
             openCardsArray[i].classList.remove('open');
             openCardsArray[i].classList.remove('show');
         }
         return 0;
-    //}
 }
 
 
