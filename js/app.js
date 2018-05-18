@@ -1,10 +1,4 @@
 /*
- * Create a list that holds all of your cards
- */
-
-
-
-/*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
@@ -50,6 +44,52 @@ function noMatchedSet(card1, card2) {
 }
 
 
+//updates the visible clock on the game
+function adjustClock (clock, seconds, minutes, stop) {
+    console.log(clock);
+    
+    seconds ++
+    if (seconds >= 60) {
+        seconds = 0;
+        minutes ++;
+    }
+    if (seconds <= 9 && minutes === 0) {
+        clock.textContent = "00:0" + seconds;
+    }
+    else if (seconds > 9 && minutes === 0) {
+        clock.textContent = "00:" + seconds;
+    }
+    else if (seconds <= 9 && minutes <= 9) {
+        clock.textContent = "0" + minutes + ":0" + seconds;
+    }
+    else if (seconds > 9 && minutes <= 9) {
+        clock.textContent = "0" + minutes  + ":" + seconds;
+    }
+    else if (seconds <= 9 && minutes > 9) {
+        clock.textContent = minutes + ":0" + seconds;
+    }
+    else {
+        clock.textContent = minutes + ":" + seconds;
+    }
+    
+    //calls stopwatch again to keep time counter going
+    stopWatch(clock, seconds, minutes, stop);
+}
+
+//starts stopwatch and sends updated time to adjustClock function
+function stopWatch (clock, seconds, minutes, stop) {
+    let t;
+
+    if (stop === true) {
+        console.log('trying to stop');
+        clearTimeout(t);        
+    }
+    else {
+        t = setTimeout(adjustClock, 1000, clock, seconds, minutes, stop);
+    }    
+}
+
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -67,19 +107,12 @@ function shuffle(array) {
 }
 
 
+
+
+
 /*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ * Create a list that holds all of your cards
  */
-
-
-
 document.addEventListener('DOMContentLoaded', function (e) {
     const deck = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o",
         "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
@@ -95,7 +128,35 @@ document.addEventListener('DOMContentLoaded', function (e) {
     displayScore.innerText = moves;
     let matchedSet = 0;
 
+    //Setup stopwatch variables
+    const timer = document.getElementsByTagName('time');
+    let myTimeOut;
+    let seconds = 0;
+    let minutes = 0;
+    let start = false;
+    const startClock = document.querySelector(".deck");
 
+    //on first card click, start stopwatch.
+    startClock.addEventListener('click', function (evt) {
+        if (evt.target.className === "card flip") {
+            myTimeOut = stopWatch(timer[0], seconds, minutes, start);
+            console.log(myTimeOut);
+            startClock.removeEventListener('click', arguments.callee);
+        }        
+    });
+    
+    
+
+/*
+ * set up the event listener for a card. If a card is clicked:
+ *  - display the card's symbol (put this functionality in another function that you call from this one)
+ *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
+ *  - if the list already has another card, check to see if the two cards match
+ *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
+ *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
+ *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
+ *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ */
     gamePlay.addEventListener('click', function (evt) {
         if (evt.target.className === "card flip") {
             flipCard(evt);
@@ -112,7 +173,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 }
 
                 if (matchedSet === 8) {
+                    stopWatch(timer[0], seconds, minutes, false);                    
                     console.log('you won');
+
                 }
                 openCards.pop();
                 openCards.pop();
@@ -128,6 +191,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 }
             }
         }
+
+
 
         const gameReset = document.querySelector('.restart');
         gameReset.addEventListener('click', function (evt) {

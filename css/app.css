@@ -92,7 +92,7 @@ h1 {
     position: relative;
 }
 
-.deck .card.wrong {
+.deck .wrong {
     background: #aa2f2f;
     font-size: 33px;
     /*animation: shake 2.0s;
@@ -113,9 +113,13 @@ h1 {
  */
 
 .score-panel {
-    text-align: left;
+    text-align: center;
     width: 345px;
     margin-bottom: 10px;
+}
+
+time {
+    color: red;   
 }
 
 .score-panel .stars {
