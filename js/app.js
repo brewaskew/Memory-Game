@@ -16,7 +16,7 @@ function displayCards(cardDeck) {
     const deckGrid = document.querySelector('.deck');
 
     for (let i = 0; i < deckGrid.children.length; i++) {
-        deckGrid.children[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";
+        deckGrid.children[i].outerHTML = "<li class='card flip'><i class='" + shuffledDeck[i] + "'></i></li>";
     }
 }
 
@@ -39,13 +39,13 @@ function setMatch(openCardsArray) {
 
 
 //resets flipped cards back to facedown and returns 0 to keep matched sets at current value
-function noMatchedSet(openCardsArray) {
-         
-    for (let i = 0; i < openCardsArray.length; i++) {
-        openCardsArray[i].classList.remove('flip');
-        openCardsArray[i].classList.remove('open');
-        openCardsArray[i].classList.remove('show');
-    }
+function noMatchedSet(card1, card2) {
+    setTimeout(function (arg1, arg2) {
+        card1.classList.remove('open');
+        card2.classList.remove('open');
+        card1.classList.remove('show');        
+        card2.classList.remove('show');     
+    }, 1500, card1, card2);
     return 0;
 }
 
@@ -97,59 +97,59 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
 
     gamePlay.addEventListener('click', function (evt) {
-            if (evt.target.className === "card") {
-                flipCard(evt);
-                openCards.push(evt.target);
-    
-                if (openCards.length === 2) {
-                    moves += 1;
-                    displayScore.innerText = moves;
-                    if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
-                        matchedSet += setMatch(openCards);
-                    }
-                    else {                        
-                        matchedSet += noMatchedSet(openCards);
-                    }
+        if (evt.target.className === "card flip") {
+            flipCard(evt);
+            openCards.push(evt.target);
 
-                    if (matchedSet === 8) {
-                        console.log('you won');
-                    }
-                    openCards.pop();
-                    openCards.pop();
-
-                    //change stars score
-                    if (moves === 13) {
-                        let removeEl = stars[0].children[2];
-                        stars[0].removeChild(removeEl);
-                    }
-                    else if (moves === 17) {
-                        removeEl = stars[0].children[1];
-                        stars[0].removeChild(removeEl);
-                    }
-                }           
-            }            
-
-            const gameReset = document.querySelector('.restart');
-            gameReset.addEventListener('click', function (evt) {
-                displayCards(deck);  //reset deck and grid
-                moves = 0;  //reset number of moves
+            if (openCards.length === 2) {
+                moves += 1;
                 displayScore.innerText = moves;
-                matchedSet = 0;  //reset number of matches
-                for (let i=0; i<openCards.length; i++) {  //remove any open cards in openCards array
-                    openCards.pop();
+                if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
+                    matchedSet += setMatch(openCards);
                 }
-                
-                /******Reset stars score******/
-                let newEl = document.createElement('li');
-                let newI = document.createElement('i');
-                newI.className = 'fa fa-star';
-                newEl.appendChild(newI);
-                                
-                for (let i=stars[0].children.length; i<3; i++) {
-                    stars[0].appendChild(newEl);
-                }   
-            });
-        
+                else {                
+                    noMatchedSet(openCards[0], openCards[1]);                   
+                }
+
+                if (matchedSet === 8) {
+                    console.log('you won');
+                }
+                openCards.pop();
+                openCards.pop();
+
+                //change stars score
+                if (moves === 13) {
+                    let removeEl = stars[0].children[2];
+                    stars[0].removeChild(removeEl);
+                }
+                else if (moves === 17) {
+                    removeEl = stars[0].children[1];
+                    stars[0].removeChild(removeEl);
+                }
+            }
+        }
+
+        const gameReset = document.querySelector('.restart');
+        gameReset.addEventListener('click', function (evt) {
+            displayCards(deck);  //reset deck and grid
+            moves = 0;  //reset number of moves
+            displayScore.innerText = moves;
+            matchedSet = 0;  //reset number of matches
+            for (let i = 0; i < openCards.length; i++) {  //remove any open cards in openCards array
+                openCards.pop();
+            }
+
+            /******Reset stars score******/
+            let newEl = document.createElement('li');
+            let newI = document.createElement('i');
+            newI.className = 'fa fa-star';
+            newEl.appendChild(newI);
+
+            for (let i = stars[0].children.length; i < 3; i++) {
+                stars[0].appendChild(newEl);
+            }
+        });
+
     });
 
 });

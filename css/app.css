@@ -82,12 +82,30 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    animation: shake 0.5s;
+    animation-iteration-count: 1;
 }
 
 .flip {
     transition: 0.6s;
     transform-style: : preserve-3d;
     position: relative;
+}
+
+.deck .card.wrong {
+    background: #aa2f2f;
+    font-size: 33px;
+    /*animation: shake 2.0s;
+    /animation-iteration-count: 2;*/
+}
+
+@keyframes shake {
+    0% {transform: translate(0px, 5px) rotate(0deg);}
+    25% {transform: translate(0px, -5px) rotate(0deg);}
+    50% {transform: translate(0px, 5px) rotate(0deg);}
+    75% {transform: translate(0px, -5px) rotate(0deg);}
+    100% {transform: translate(0px, 5px) rotate(360deg);}
+    
 }
 
 /*
