@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 //If all cards matched, stop timer and display "winner" modal-box
                 /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
                 **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
-                if (matchedSet === 1) {
+                if (matchedSet === 8) {
                     start = false;
                     if (moves < 13) {
                         finalStars = 3;
