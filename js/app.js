@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     //starts stopwatch and sends updated time to adjustClock function
     function stopWatch(clock) {
-        let t;
+        let time;
 
         if (start === true) {
             time = setTimeout(adjustClock, 1000, clock);
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     stars[0].removeChild(removeEl);
                 }
                 else if (moves === 17) {
-                    removeEl = stars[0].children[1];
+                    let removeEl = stars[0].children[1];
                     stars[0].removeChild(removeEl);
                 }
             }
