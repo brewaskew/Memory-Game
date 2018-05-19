@@ -1,118 +1,4 @@
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
-function displayCards(cardDeck) {
-    const shuffledDeck = shuffle(cardDeck);
-    const deckGrid = document.querySelector('.deck');
-
-    for (let i = 0; i < deckGrid.children.length; i++) {
-        deckGrid.children[i].outerHTML = "<li class='card flip'><i class='" + shuffledDeck[i] + "'></i></li>";
-    }
-}
-
-function flipCard(card) {
-    card.target.classList.add('flip');
-    card.target.classList.add('open');
-    card.target.classList.add('show');
-}
-
-
-
-//Check if cards are a match and lock them in place. Return 1 to increment matchedSets counter
-function setMatch(openCardsArray) {
-
-    for (let i = 0; i < openCardsArray.length; i++) {
-        openCardsArray[i].classList.add('match');
-    }
-    return 1;
-}
-
-
-//resets flipped cards back to facedown and returns 0 to keep matched sets at current value
-function noMatchedSet(card1, card2) {
-    setTimeout(function (arg1, arg2) {
-        card1.classList.remove('open');
-        card2.classList.remove('open');
-        card1.classList.remove('show');        
-        card2.classList.remove('show');     
-    }, 1500, card1, card2);
-    return 0;
-}
-
-
-//updates the visible clock on the game
-function adjustClock (clock, seconds, minutes, stop) {
-    console.log(clock);
-    
-    seconds ++
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes ++;
-    }
-    if (seconds <= 9 && minutes === 0) {
-        clock.textContent = "00:0" + seconds;
-    }
-    else if (seconds > 9 && minutes === 0) {
-        clock.textContent = "00:" + seconds;
-    }
-    else if (seconds <= 9 && minutes <= 9) {
-        clock.textContent = "0" + minutes + ":0" + seconds;
-    }
-    else if (seconds > 9 && minutes <= 9) {
-        clock.textContent = "0" + minutes  + ":" + seconds;
-    }
-    else if (seconds <= 9 && minutes > 9) {
-        clock.textContent = minutes + ":0" + seconds;
-    }
-    else {
-        clock.textContent = minutes + ":" + seconds;
-    }
-    
-    //calls stopwatch again to keep time counter going
-    stopWatch(clock, seconds, minutes, stop);
-}
-
-//starts stopwatch and sends updated time to adjustClock function
-function stopWatch (clock, seconds, minutes, stop) {
-    let t;
-
-    if (stop === true) {
-        console.log('trying to stop');
-        clearTimeout(t);        
-    }
-    else {
-        t = setTimeout(adjustClock, 1000, clock, seconds, minutes, stop);
-    }    
-}
-
-
-
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
-
-
-
-
-
-/*
- * Create a list that holds all of your cards
- */
+//create deck of cards and call displayCards function
 document.addEventListener('DOMContentLoaded', function (e) {
     const deck = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o",
         "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
@@ -120,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     displayCards(deck);
 
+    //Setup gameplay variables
     const gamePlay = document.querySelector(".deck");
     let openCards = [];
     let stars = document.getElementsByClassName('stars');
@@ -130,33 +17,148 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     //Setup stopwatch variables
     const timer = document.getElementsByTagName('time');
-    let myTimeOut;
+    let start = true;
     let seconds = 0;
     let minutes = 0;
-    let start = false;
     const startClock = document.querySelector(".deck");
+
+    /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
+    **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
+    //Setup modal-box variables
+    const content = document.querySelector(".content");
+    const modal = document.querySelector(".modal");
+    const closeButton = document.querySelector(".close-button");
+    let finalTime = 0;
+    let finalStars = 0;
+
+    //toggle modal-box on and off
+    function toggleModal() {
+        modal.classList.toggle("show-modal");
+    }
+
+    closeButton.addEventListener("click", toggleModal);
+
+
+    /*
+     * Display the cards on the page
+     *   - shuffle the list of cards using the provided "shuffle" method below
+     *   - loop through each card and create its HTML
+     *   - add each card's HTML to the page
+     */
+    function displayCards(cardDeck) {
+        const shuffledDeck = shuffle(cardDeck);
+        const deckGrid = document.querySelector('.deck');
+
+        for (let i = 0; i < deckGrid.children.length; i++) {
+            deckGrid.children[i].outerHTML = "<li class='card flip'><i class='" + shuffledDeck[i] + "'></i></li>";
+        }
+    }
+
+    //On user click of a card, display it face-up
+    function flipCard(card) {
+        card.target.classList.add('flip');
+        card.target.classList.add('open');
+        card.target.classList.add('show');
+    }
+
+
+
+    //Check if cards are a match and lock them in place. Return 1 to increment matchedSets counter
+    function setMatch(openCardsArray) {
+
+        for (let i = 0; i < openCardsArray.length; i++) {
+            openCardsArray[i].classList.add('match');
+        }
+        return 1;
+    }
+
+
+    //resets flipped cards back to facedown and returns 0 to keep matched sets at current value
+    function noMatchedSet(card1, card2) {
+        setTimeout(function (arg1, arg2) {
+            card1.classList.remove('open');
+            card2.classList.remove('open');
+            card1.classList.remove('show');
+            card2.classList.remove('show');
+        }, 700, card1, card2);
+        return 0;
+    }
+
+
+    //updates the visible clock on the game
+    function adjustClock(clock) {
+
+        seconds++
+        if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+        }
+        if (seconds <= 9 && minutes === 0) {
+            clock.textContent = "00:0" + seconds;
+        }
+        else if (seconds > 9 && minutes === 0) {
+            clock.textContent = "00:" + seconds;
+        }
+        else if (seconds <= 9 && minutes <= 9) {
+            clock.textContent = "0" + minutes + ":0" + seconds;
+        }
+        else if (seconds > 9 && minutes <= 9) {
+            clock.textContent = "0" + minutes + ":" + seconds;
+        }
+        else if (seconds <= 9 && minutes > 9) {
+            clock.textContent = minutes + ":0" + seconds;
+        }
+        else {
+            clock.textContent = minutes + ":" + seconds;
+        }
+
+        //calls stopwatch again to keep time counter going
+        stopWatch(clock);
+    }
+
+    //starts stopwatch and sends updated time to adjustClock function
+    function stopWatch(clock) {
+        let t;
+
+        if (start === true) {
+            time = setTimeout(adjustClock, 1000, clock);
+        }
+        else {
+            clearTimeout(time);
+        }
+    }
+
+    // Shuffle function from http://stackoverflow.com/a/2450976
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
 
     //on first card click, start stopwatch.
     startClock.addEventListener('click', function (evt) {
         if (evt.target.className === "card flip") {
-            myTimeOut = stopWatch(timer[0], seconds, minutes, start);
-            console.log(myTimeOut);
+            stopWatch(timer[0]);
             startClock.removeEventListener('click', arguments.callee);
-        }        
+        }
     });
-    
-    
 
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+
+
+    /*On user click of a card, display the card face-up using flipCard function and add card to openCards array.
+    **Check if 2 cards are in openCards array, if yes, compare the cards for a match.  If the cards match lock them
+    **in the face-up position.  If not a match, set back to face-down.  Increment moves counter by 1 and remove the cards
+    **from the openCards array.  Check number of moves and increment star counter down by 1, if appropriate.
+    **Check if all cards have been matched, if yes, stop timer and display "winner" modal-box.
+    */
     gamePlay.addEventListener('click', function (evt) {
         if (evt.target.className === "card flip") {
             flipCard(evt);
@@ -168,15 +170,49 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
                     matchedSet += setMatch(openCards);
                 }
-                else {                
-                    noMatchedSet(openCards[0], openCards[1]);                   
+                else {
+                    noMatchedSet(openCards[0], openCards[1]);
                 }
 
-                if (matchedSet === 8) {
-                    stopWatch(timer[0], seconds, minutes, false);                    
-                    console.log('you won');
+                //If all cards matched, stop timer and display "winner" modal-box
+                /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
+                **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
+                if (matchedSet === 1) {
+                    start = false;
+                    if (moves < 13) {
+                        finalStars = 3;
+                    }
+                    else if (moves >= 17) {
+                        finalStars = 1;
+                    }
+                    else {
+                        finalStars = 2;
+                    }
 
+                    if (seconds <= 9 && minutes === 0) {
+                        finalTime = "00:0" + seconds;
+                    }
+                    else if (seconds > 9 && minutes === 0) {
+                        finalTime = "00:" + seconds;
+                    }
+                    else if (seconds <= 9 && minutes <= 9) {
+                        finalTime = "0" + minutes + ":0" + seconds;
+                    }
+                    else if (seconds > 9 && minutes <= 9) {
+                        finalTime = "0" + minutes + ":" + seconds;
+                    }
+                    else if (seconds <= 9 && minutes > 9) {
+                        finalTime = minutes + ":0" + seconds;
+                    }
+                    else {
+                        finalTime = minutes + ":" + seconds;
+                    }
+
+                    content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    toggleModal();
                 }
+
+                //remove open cards from the array
                 openCards.pop();
                 openCards.pop();
 
@@ -192,27 +228,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
             }
         }
 
-
-
+        //Reset the game
         const gameReset = document.querySelector('.restart');
         gameReset.addEventListener('click', function (evt) {
-            displayCards(deck);  //reset deck and grid
-            moves = 0;  //reset number of moves
-            displayScore.innerText = moves;
-            matchedSet = 0;  //reset number of matches
-            for (let i = 0; i < openCards.length; i++) {  //remove any open cards in openCards array
-                openCards.pop();
-            }
-
-            /******Reset stars score******/
-            let newEl = document.createElement('li');
-            let newI = document.createElement('i');
-            newI.className = 'fa fa-star';
-            newEl.appendChild(newI);
-
-            for (let i = stars[0].children.length; i < 3; i++) {
-                stars[0].appendChild(newEl);
-            }
+            location.reload();
         });
 
     });
