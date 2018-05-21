@@ -1,8 +1,11 @@
 //create deck of cards and call displayCards function
 document.addEventListener('DOMContentLoaded', function (e) {
-    const deck = ["fa fa-diamond", "fa fa-diamond", "fa fa-paper-plane-o", "fa fa-paper-plane-o",
-        "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube",
-        "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
+    //creates array of each kind of card value
+    const shortDeck = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", 
+    "fa fa-bicycle", "fa fa-bomb"];
+    
+    //creates array of eack kind of card value and a matching card for each
+    const deck = shortDeck.concat(shortDeck);
 
     displayCards(deck);
 
@@ -28,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const content = document.querySelector(".content");
     const modal = document.querySelector(".modal");
     const closeButton = document.querySelector(".close-button");
+    const replay = document.querySelector(".replay");
     let finalTime = 0;
     let finalStars = 0;
 
@@ -209,6 +213,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     }
 
                     content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    replay.addEventListener("click", function () {
+                        location.reload();
+                    });
                     toggleModal();
                 }
 

@@ -182,3 +182,9 @@ time {
     transform: scale(1.0);
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
+
+.replay {
+    background-color: #07078b;
+    color: rgb(252, 235, 0);
+    border: 1px solid #50d9fc;
+    border-radius: 20px;}
