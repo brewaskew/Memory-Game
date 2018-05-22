@@ -25,7 +25,8 @@ In making this app, I created a bulk of the javascript code myself.  Some code w
 3.  The starter code also used Google Font "Coda".  https://fonts.googleapis.com/css?family=Coda
 4. For the implementation of the modal-box I relied heavily on an example from SABE at: https://sabe.io/tutorials/how-to-create-modal-popup-box and the book, "Javascript & Jquery - interactive front-end web development" by: Jon Duckett
 5. For the implementation of the timer function I used ideas and elements as presented by: https://jsfiddle.net/Daniel_Hug/pvk6p/
-6. A special "thank you" shout-out to Vanessa Chau (FEND slack - VanessaS) for getting me pointed in the right direction for updating the cards within the openCards array in app.js.
+6. The starter code provided a card shuffle implementation from StackOverflow: http://stackoverflow.com/a/2450976.
+7. A special "thank you" shout-out to Vanessa Chau (FEND slack - VanessaS) for getting me pointed in the right direction for updating the cards within the openCards array in app.js.
 
 ## Build & Theme
 The site is built using html5, css3, and javascript, using font-awesome icons for the pictures on the cards.  The theme is a new style for an old classic.
