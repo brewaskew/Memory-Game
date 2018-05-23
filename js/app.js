@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card2.classList.remove('open');
             card1.classList.remove('show');
             card2.classList.remove('show');
-        }, 425, card1, card2);
+        }, 700, card1, card2);
         return 0;
     }
 
