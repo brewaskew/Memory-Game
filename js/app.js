@@ -1,9 +1,9 @@
 //create deck of cards and call displayCards function
 document.addEventListener('DOMContentLoaded', function (e) {
     //creates array of each kind of card value
-    const shortDeck = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", 
-    "fa fa-bicycle", "fa fa-bomb"];
-    
+    const shortDeck = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf",
+        "fa fa-bicycle", "fa fa-bomb"];
+
     //creates array of eack kind of card value and a matching card for each
     const deck = shortDeck.concat(shortDeck);
 
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card2.classList.remove('open');
             card1.classList.remove('show');
             card2.classList.remove('show');
-        }, 700, card1, card2);
+        }, 425, card1, card2);
         return 0;
     }
 
@@ -129,6 +129,41 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
         else {
             clearTimeout(time);
+        }
+    }
+    
+    //returns final star count when user wins game
+    function getFinalStars(totalMoves) {
+        if (totalMoves < 13) {
+            return 3;
+        }
+        else if (totalMoves >= 17) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+
+    //returns formatted final time string when user wins game
+    function getFinalTime(sec, min) {
+        if (sec <= 9 && min === 0) {
+            return "00:0" + sec;
+        }
+        else if (sec > 9 && min === 0) {
+            return "00:" + sec;
+        }
+        else if (sec <= 9 && min <= 9) {
+            return "0" + min + ":0" + sec;
+        }
+        else if (sec > 9 && min <= 9) {
+            return "0" + min + ":" + sec;
+        }
+        else if (sec <= 9 && min > 9) {
+            return min + ":0" + sec;
+        }
+        else {
+            return min + ":" + sec;
         }
     }
 
@@ -183,34 +218,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
                 if (matchedSet === 8) {
                     start = false;
-                    if (moves < 13) {
-                        finalStars = 3;
-                    }
-                    else if (moves >= 17) {
-                        finalStars = 1;
-                    }
-                    else {
-                        finalStars = 2;
-                    }
+                    finalStars = getFinalStars(moves);
 
-                    if (seconds <= 9 && minutes === 0) {
-                        finalTime = "00:0" + seconds;
-                    }
-                    else if (seconds > 9 && minutes === 0) {
-                        finalTime = "00:" + seconds;
-                    }
-                    else if (seconds <= 9 && minutes <= 9) {
-                        finalTime = "0" + minutes + ":0" + seconds;
-                    }
-                    else if (seconds > 9 && minutes <= 9) {
-                        finalTime = "0" + minutes + ":" + seconds;
-                    }
-                    else if (seconds <= 9 && minutes > 9) {
-                        finalTime = minutes + ":0" + seconds;
-                    }
-                    else {
-                        finalTime = minutes + ":" + seconds;
-                    }
+                    finalTime = getFinalTime(seconds, minutes);
 
                     content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
                     replay.addEventListener("click", function () {
