@@ -1,9 +1,9 @@
 //create deck of cards and call displayCards function
 document.addEventListener('DOMContentLoaded', function (e) {
     //creates array of each kind of card value
-    const shortDeck = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", 
-    "fa fa-bicycle", "fa fa-bomb"];
-    
+    const shortDeck = ["fa fa-diamond", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bolt", "fa fa-cube", "fa fa-leaf",
+        "fa fa-bicycle", "fa fa-bomb"];
+
     //creates array of eack kind of card value and a matching card for each
     const deck = shortDeck.concat(shortDeck);
 
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card2.classList.remove('open');
             card1.classList.remove('show');
             card2.classList.remove('show');
-        }, 700, card1, card2);
+        }, 425, card1, card2);
         return 0;
     }
 
@@ -132,6 +132,41 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
     }
 
+    //returns final star count when user wins game
+    function getFinalStars(totalMoves) {
+        if (totalMoves < 13) {
+            return 3;
+        }
+        else if (totalMoves >= 17) {
+            return 1;
+        }
+        else {
+            return 2;
+        }
+    }
+
+    //returns formatted final time string when user wins game
+    function getFinalTime(sec, min) {
+        if (sec <= 9 && min === 0) {
+            return "00:0" + sec;
+        }
+        else if (sec > 9 && min === 0) {
+            return "00:" + sec;
+        }
+        else if (sec <= 9 && min <= 9) {
+            return "0" + min + ":0" + sec;
+        }
+        else if (sec > 9 && min <= 9) {
+            return "0" + min + ":" + sec;
+        }
+        else if (sec <= 9 && min > 9) {
+            return min + ":0" + sec;
+        }
+        else {
+            return min + ":" + sec;
+        }
+    }
+
     // Shuffle function from http://stackoverflow.com/a/2450976
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -165,82 +200,59 @@ document.addEventListener('DOMContentLoaded', function (e) {
     */
     gamePlay.addEventListener('click', function (evt) {
         if (evt.target.className === "card flip") {
-            flipCard(evt);
-            openCards.push(evt.target);
+            if (openCards.length < 2) {
+                flipCard(evt);
+                openCards.push(evt.target);
 
-            if (openCards.length === 2) {
-                moves += 1;
-                displayScore.innerText = moves;
-                if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
-                    matchedSet += setMatch(openCards);
-                }
-                else {
-                    noMatchedSet(openCards[0], openCards[1]);
-                }
-
-                //If all cards matched, stop timer and display "winner" modal-box
-                /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
-                **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
-                if (matchedSet === 8) {
-                    start = false;
-                    if (moves < 13) {
-                        finalStars = 3;
-                    }
-                    else if (moves >= 17) {
-                        finalStars = 1;
+                if (openCards.length === 2) {
+                    moves += 1;
+                    displayScore.innerText = moves;
+                    if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
+                        matchedSet += setMatch(openCards);
                     }
                     else {
-                        finalStars = 2;
+                        noMatchedSet(openCards[0], openCards[1]);
                     }
 
-                    if (seconds <= 9 && minutes === 0) {
-                        finalTime = "00:0" + seconds;
-                    }
-                    else if (seconds > 9 && minutes === 0) {
-                        finalTime = "00:" + seconds;
-                    }
-                    else if (seconds <= 9 && minutes <= 9) {
-                        finalTime = "0" + minutes + ":0" + seconds;
-                    }
-                    else if (seconds > 9 && minutes <= 9) {
-                        finalTime = "0" + minutes + ":" + seconds;
-                    }
-                    else if (seconds <= 9 && minutes > 9) {
-                        finalTime = minutes + ":0" + seconds;
-                    }
-                    else {
-                        finalTime = minutes + ":" + seconds;
+                    //If all cards matched, stop timer and display "winner" modal-box
+                    /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
+                    **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
+                    if (matchedSet === 8) {
+                        start = false;
+                        finalStars = getFinalStars(moves);
+
+                        finalTime = getFinalTime(seconds, minutes);
+
+                        content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                        replay.addEventListener("click", function () {
+                            location.reload();
+                        });
+                        toggleModal();
                     }
 
-                    content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
-                    replay.addEventListener("click", function () {
-                        location.reload();
-                    });
-                    toggleModal();
-                }
+                    //remove open cards from the array
+                    openCards.pop();
+                    openCards.pop();
 
-                //remove open cards from the array
-                openCards.pop();
-                openCards.pop();
-
-                //change stars score
-                if (moves === 13) {
-                    let removeEl = stars[0].children[2];
-                    stars[0].removeChild(removeEl);
-                }
-                else if (moves === 17) {
-                    let removeEl = stars[0].children[1];
-                    stars[0].removeChild(removeEl);
+                    //change stars score
+                    if (moves === 13) {
+                        let removeEl = stars[0].children[2];
+                        stars[0].removeChild(removeEl);
+                    }
+                    else if (moves === 17) {
+                        let removeEl = stars[0].children[1];
+                        stars[0].removeChild(removeEl);
+                    }
                 }
             }
         }
 
-        //Reset the game
-        const gameReset = document.querySelector('.restart');
-        gameReset.addEventListener('click', function (evt) {
-            location.reload();
-        });
+            //Reset the game
+            const gameReset = document.querySelector('.restart');
+            gameReset.addEventListener('click', function (evt) {
+                location.reload();
+            });
 
-    });
+        });
 
 });
