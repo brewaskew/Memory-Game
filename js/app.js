@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     closeButton.addEventListener("click", toggleModal);
 
-
     /*
      * Display the cards on the page
      *   - shuffle the list of cards using the provided "shuffle" method below
@@ -65,8 +64,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         card.target.classList.add('show');
     }
 
-
-
     //Check if cards are a match and lock them in place. Return 1 to increment matchedSets counter
     function setMatch(openCardsArray) {
 
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
         return 1;
     }
-
 
     //resets flipped cards back to facedown and returns 0 to keep matched sets at current value
     function noMatchedSet(card1, card2) {
@@ -91,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }, 850, card1, card2);
         return 0;
     }
-
 
     //updates the visible clock on the game
     function adjustClock(clock) {
@@ -194,8 +189,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
     });
 
-
-
     /*On user click of a card, display the card face-up using flipCard function and add card to openCards array.
     **Check if 2 cards are in openCards array, if yes, compare the cards for a match.  If the cards match lock them
     **in the face-up position.  If not a match, set back to face-down.  Increment moves counter by 1 and remove the cards
@@ -242,12 +235,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 //remove open cards from the array
 
-                setTimeout(function () {
-                    console.log(openCards.length);
+                setTimeout(function () {                    
                     while (openCards.length !== 0) {
                         openCards.pop();
                     }
-                    console.log(openCards.length);
                 }, 1000);
 
                 //change stars score
@@ -267,7 +258,5 @@ document.addEventListener('DOMContentLoaded', function (e) {
         gameReset.addEventListener('click', function (evt) {
             location.reload();
         });
-
     });
-
 });
