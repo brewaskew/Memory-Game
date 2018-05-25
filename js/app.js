@@ -201,16 +201,21 @@ document.addEventListener('DOMContentLoaded', function (e) {
     gamePlay.addEventListener('click', function (evt) {
 
         if (evt.target.className === "card flip") {
-            openCards.push(evt.target);
+            //openCards.push(evt.target);
             
             if (openCards.length < 2) {
                 flipCard(evt);
-                //openCards.push(evt.target);
+                openCards.push(evt.target);
                 console.log(openCards.length);
             }
 
+            /*This is how I can have it stop flipping more than 2 cards, but pauses program
+            ** If i make this just an if statement it goes back to being able to open more than 2 cards
+            ** If I uncomment the flipcard(evt) and make the outter openCards.push command active and comment
+            ** out the current 'live' one, it also goes back to being able to open more than 2 cards. */
+           
             else if (openCards.length === 2) {
-                flipCard(evt);   // make this live if openCards.push is live before if oC.l <2
+                //flipCard(evt);   // make this live if openCards.push is live before if oC.l <2
                 console.log(openCards.length + 'in compare');
                 moves += 1;
                 displayScore.innerText = moves;
