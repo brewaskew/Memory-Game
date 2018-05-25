@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         const deckGrid = document.querySelector('.deck');
 
         for (let i = 0; i < deckGrid.children.length; i++) {
-            deckGrid.children[i].outerHTML = "<li class='card flip'><i class='" + shuffledDeck[i] + "'></i></li>";
+            deckGrid.children[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";
         }
     }
 
@@ -85,6 +85,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card1.classList.remove('show');
             card2.classList.remove('show');
         }, 700, card1, card2);
+        setTimeout(function (arg1, arg2) {
+            card1.classList.remove('flip');
+            card2.classList.remove('flip');
+        }, 850, card1, card2);
         return 0;
     }
 
@@ -184,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     //on first card click, start stopwatch.
     startClock.addEventListener('click', function (evt) {
-        if (evt.target.className === "card flip") {
+        if (evt.target.className === "card") {
             stopWatch(timer[0]);
             startClock.removeEventListener('click', arguments.callee);
         }
@@ -200,23 +204,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
     */
     gamePlay.addEventListener('click', function (evt) {
 
-        if (evt.target.className === "card flip") {
-            //openCards.push(evt.target);
-            
-            if (openCards.length < 2) {
-                flipCard(evt);
-                openCards.push(evt.target);
-                console.log(openCards.length);
-            }
+        if (evt.target.className === "card" && openCards.length < 2) {
+            openCards.push(evt.target);
+            flipCard(evt);
 
-            /*This is how I can have it stop flipping more than 2 cards, but pauses program
-            ** If i make this just an if statement it goes back to being able to open more than 2 cards
-            ** If I uncomment the flipcard(evt) and make the outter openCards.push command active and comment
-            ** out the current 'live' one, it also goes back to being able to open more than 2 cards. */
-           
-            else if (openCards.length === 2) {
-                //flipCard(evt);   // make this live if openCards.push is live before if oC.l <2
-                console.log(openCards.length + 'in compare');
+            if (openCards.length === 2) {
+                flipCard(evt);
                 moves += 1;
                 displayScore.innerText = moves;
                 if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
@@ -240,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     else {
                         content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
                     }
-                    
+
                     replay.addEventListener("click", function () {
                         location.reload();
                     });
@@ -248,8 +241,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 }
 
                 //remove open cards from the array
-                openCards.pop();
-                openCards.pop();
+
+                setTimeout(function () {
+                    console.log(openCards.length);
+                    while (openCards.length !== 0) {
+                        openCards.pop();
+                    }
+                    console.log(openCards.length);
+                }, 1000);
 
                 //change stars score
                 if (moves === 13) {
@@ -261,7 +260,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     stars[0].removeChild(removeEl);
                 }
             }
-
         }
 
         //Reset the game
