@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     closeButton.addEventListener("click", toggleModal);
 
-
     /*
      * Display the cards on the page
      *   - shuffle the list of cards using the provided "shuffle" method below
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         const deckGrid = document.querySelector('.deck');
 
         for (let i = 0; i < deckGrid.children.length; i++) {
-            deckGrid.children[i].outerHTML = "<li class='card flip'><i class='" + shuffledDeck[i] + "'></i></li>";
+            deckGrid.children[i].outerHTML = "<li class='card'><i class='" + shuffledDeck[i] + "'></i></li>";
         }
     }
 
@@ -65,8 +64,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         card.target.classList.add('show');
     }
 
-
-
     //Check if cards are a match and lock them in place. Return 1 to increment matchedSets counter
     function setMatch(openCardsArray) {
 
@@ -76,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         return 1;
     }
 
-
     //resets flipped cards back to facedown and returns 0 to keep matched sets at current value
     function noMatchedSet(card1, card2) {
         setTimeout(function (arg1, arg2) {
@@ -85,9 +81,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card1.classList.remove('show');
             card2.classList.remove('show');
         }, 700, card1, card2);
+        setTimeout(function (arg1, arg2) {
+            card1.classList.remove('flip');
+            card2.classList.remove('flip');
+        }, 850, card1, card2);
         return 0;
     }
-
 
     //updates the visible clock on the game
     function adjustClock(clock) {
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             clearTimeout(time);
         }
     }
-    
+
     //returns final star count when user wins game
     function getFinalStars(totalMoves) {
         if (totalMoves < 13) {
@@ -184,13 +183,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     //on first card click, start stopwatch.
     startClock.addEventListener('click', function (evt) {
-        if (evt.target.className === "card flip") {
+        if (evt.target.className === "card") {
             stopWatch(timer[0]);
             startClock.removeEventListener('click', arguments.callee);
         }
     });
-
-
 
     /*On user click of a card, display the card face-up using flipCard function and add card to openCards array.
     **Check if 2 cards are in openCards array, if yes, compare the cards for a match.  If the cards match lock them
@@ -199,11 +196,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
     **Check if all cards have been matched, if yes, stop timer and display "winner" modal-box.
     */
     gamePlay.addEventListener('click', function (evt) {
-        if (evt.target.className === "card flip") {
-            flipCard(evt);
+
+        if (evt.target.className === "card" && openCards.length < 2) {
             openCards.push(evt.target);
+            flipCard(evt);
 
             if (openCards.length === 2) {
+                flipCard(evt);
                 moves += 1;
                 displayScore.innerText = moves;
                 if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
@@ -221,8 +220,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     finalStars = getFinalStars(moves);
 
                     finalTime = getFinalTime(seconds, minutes);
+                    if (finalStars === 1) {
+                        content.textContent = "You achieved " + finalStars + " star, with " + moves + " moves, in " + finalTime + ".";
+                    }
+                    else {
+                        content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    }
 
-                    content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
                     replay.addEventListener("click", function () {
                         location.reload();
                     });
@@ -230,8 +234,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 }
 
                 //remove open cards from the array
-                openCards.pop();
-                openCards.pop();
+
+                setTimeout(function () {                    
+                    while (openCards.length !== 0) {
+                        openCards.pop();
+                    }
+                }, 1000);
 
                 //change stars score
                 if (moves === 13) {
@@ -250,7 +258,5 @@ document.addEventListener('DOMContentLoaded', function (e) {
         gameReset.addEventListener('click', function (evt) {
             location.reload();
         });
-
     });
-
 });
