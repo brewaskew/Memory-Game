@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     //updates the visible clock on the game
     function adjustClock(clock) {
 
-        seconds++
+        seconds++;
         if (seconds >= 60) {
             seconds = 0;
             minutes++;
@@ -235,10 +235,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 //remove open cards from the array
 
-                setTimeout(function () {                    
-                    while (openCards.length !== 0) {
-                        openCards.pop();
-                    }
+                setTimeout(function () {
+                    openCards = [];
                 }, 1000);
 
                 //change stars score
