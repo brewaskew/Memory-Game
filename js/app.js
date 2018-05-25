@@ -201,13 +201,16 @@ document.addEventListener('DOMContentLoaded', function (e) {
     gamePlay.addEventListener('click', function (evt) {
 
         if (evt.target.className === "card flip") {
+            openCards.push(evt.target);
+            
             if (openCards.length < 2) {
                 flipCard(evt);
-                openCards.push(evt.target);
+                //openCards.push(evt.target);
                 console.log(openCards.length);
             }
 
             else if (openCards.length === 2) {
+                flipCard(evt);   // make this live if openCards.push is live before if oC.l <2
                 console.log(openCards.length + 'in compare');
                 moves += 1;
                 displayScore.innerText = moves;
@@ -226,8 +229,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     finalStars = getFinalStars(moves);
 
                     finalTime = getFinalTime(seconds, minutes);
-
-                    content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    if (finalStars === 1) {
+                        content.textContent = "You achieved " + finalStars + " star, with " + moves + " moves, in " + finalTime + ".";
+                    }
+                    else {
+                        content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    }
+                    
                     replay.addEventListener("click", function () {
                         location.reload();
                     });
@@ -248,14 +256,15 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     stars[0].removeChild(removeEl);
                 }
             }
+
         }
 
-            //Reset the game
-            const gameReset = document.querySelector('.restart');
-            gameReset.addEventListener('click', function (evt) {
-                location.reload();
-            });
-
+        //Reset the game
+        const gameReset = document.querySelector('.restart');
+        gameReset.addEventListener('click', function (evt) {
+            location.reload();
         });
+
+    });
 
 });
