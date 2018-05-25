@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             card2.classList.remove('open');
             card1.classList.remove('show');
             card2.classList.remove('show');
-        }, 425, card1, card2);
+        }, 700, card1, card2);
         return 0;
     }
 
@@ -199,50 +199,53 @@ document.addEventListener('DOMContentLoaded', function (e) {
     **Check if all cards have been matched, if yes, stop timer and display "winner" modal-box.
     */
     gamePlay.addEventListener('click', function (evt) {
+
         if (evt.target.className === "card flip") {
             if (openCards.length < 2) {
                 flipCard(evt);
                 openCards.push(evt.target);
+                console.log(openCards.length);
+            }
 
-                if (openCards.length === 2) {
-                    moves += 1;
-                    displayScore.innerText = moves;
-                    if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
-                        matchedSet += setMatch(openCards);
-                    }
-                    else {
-                        noMatchedSet(openCards[0], openCards[1]);
-                    }
+            else if (openCards.length === 2) {
+                console.log(openCards.length + 'in compare');
+                moves += 1;
+                displayScore.innerText = moves;
+                if (openCards[0].firstElementChild.classList[1] === openCards[1].firstElementChild.classList[1]) {
+                    matchedSet += setMatch(openCards);
+                }
+                else {
+                    noMatchedSet(openCards[0], openCards[1]);
+                }
 
-                    //If all cards matched, stop timer and display "winner" modal-box
-                    /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
-                    **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
-                    if (matchedSet === 8) {
-                        start = false;
-                        finalStars = getFinalStars(moves);
+                //If all cards matched, stop timer and display "winner" modal-box
+                /*modal-box implementation with help from https://sabe.io/tutorials/how-to-create-modal-popup-box
+                **and "Javascript and Jquery - interactive front-end web development" By: Jon Duckett */
+                if (matchedSet === 8) {
+                    start = false;
+                    finalStars = getFinalStars(moves);
 
-                        finalTime = getFinalTime(seconds, minutes);
+                    finalTime = getFinalTime(seconds, minutes);
 
-                        content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
-                        replay.addEventListener("click", function () {
-                            location.reload();
-                        });
-                        toggleModal();
-                    }
+                    content.textContent = "You achieved " + finalStars + " stars, with " + moves + " moves, in " + finalTime + ".";
+                    replay.addEventListener("click", function () {
+                        location.reload();
+                    });
+                    toggleModal();
+                }
 
-                    //remove open cards from the array
-                    openCards.pop();
-                    openCards.pop();
+                //remove open cards from the array
+                openCards.pop();
+                openCards.pop();
 
-                    //change stars score
-                    if (moves === 13) {
-                        let removeEl = stars[0].children[2];
-                        stars[0].removeChild(removeEl);
-                    }
-                    else if (moves === 17) {
-                        let removeEl = stars[0].children[1];
-                        stars[0].removeChild(removeEl);
-                    }
+                //change stars score
+                if (moves === 13) {
+                    let removeEl = stars[0].children[2];
+                    stars[0].removeChild(removeEl);
+                }
+                else if (moves === 17) {
+                    let removeEl = stars[0].children[1];
+                    stars[0].removeChild(removeEl);
                 }
             }
         }
